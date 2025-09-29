@@ -143,7 +143,7 @@ startx
 - Rofi: `themes/nord.rasi` style.
 
 ## 6) Wi‑Fi helper
-- `wifi-reconnect.sh`: run as root (e.g., `doas ./wifi-reconnect.sh wlan0 /etc/wpa_supplicant.conf`) to restart wpa_supplicant and dhclient on demand. Useful after AP roaming or resume.
+- `wifi-reconnect.sh`: run as root (e.g., `doas ./wifi-reconnect.sh`) to restart wpa_supplicant and dhclient on demand. Useful after AP roaming or resume.
 
 ## 7) Troubleshooting & Notes
 - Graphics: verify `i915kms` is loaded (`kldstat | grep i915`). For tearing, ensure `20-intel.conf` and KMS are active; consider enabling TearFree in the Xorg snippet already provided in repo.
