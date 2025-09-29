@@ -18,7 +18,7 @@ This guide explains how to install FreeBSD 14 on a ThinkPad T480 and apply this 
 
 ## 2) Post‑install System Configuration
 
-All referenced files live in `system config/` in this repo.
+All referenced files live in `system_config_files/` in this repo.
 
 ### Boot loader and kernel modules — `/boot/loader.conf`
 Key items from this repo’s `loader.conf` and why they matter:
@@ -86,31 +86,22 @@ doas ln -sf "$(pwd)/system config/20-intel.conf" \
 
 ## 4) Dotfiles and GUI Setup
 
-All user configs are under `gui config/.config/` and `.themes/`.
+All user configs are under `dotfiles/.config/` and `.themes/`.
 
 ### Install desktop packages
-Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, xidle, pulseaudio or pipewire(+wireplumber), playerctl, backlight, git, doas.
+Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, xidle, pulseaudio or pipewire(+wireplumber), playerctl, xbacklight, git, doas.
 
 ```bash
 doas pkg install -y \
   xorg xinit i3 i3status i3lock rofi dunst picom feh scrot \
   alacritty jetbrains-mono clipmenu xidle \
-  pulseaudio playerctl xbacklight git doas
+  pulseaudio playerctl xbacklight git
 ```
 
 ### Clone and link
-- Clone this repo somewhere (e.g., `~/projects/`).
+- Clone this repo
 - Create config dirs: `~/.config/{i3,i3status,alacritty,rofi,dunst,gtk-3.0}` and `~/.themes`.
-- Symlink these:
-  - `gui config/.config/i3/config` → `~/.config/i3/config`
-  - `gui config/.config/i3status/config` → `~/.config/i3status/config`
-  - `gui config/.config/i3status/scripts` → `~/.config/i3status/scripts`
-  - `gui config/.config/alacritty/alacritty.toml` → `~/.config/alacritty/alacritty.toml`
-  - `gui config/.config/rofi/config.rasi` → `~/.config/rofi/config.rasi`
-  - `gui config/.config/dunst/dunstrc` → `~/.config/dunst/dunstrc`
-  - `gui config/.config/gtk-3.0/settings.ini` → `~/.config/gtk-3.0/settings.ini`
-  - `gui config/.themes/Nordic` → `~/.themes/Nordic` (copy or link)
-
+- Copy config files from repo to '~/.config' 
 ### Starting X/i3
 - Create a simple `~/.xinitrc` `exec i3`.
 - Start X:

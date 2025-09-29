@@ -32,7 +32,7 @@ Install via pkg (adjust as needed):
 - Terminal/fonts: alacritty, jetbrains-mono, font-awesome, nerd-fonts (optional)
 - Graphics/Wi‑Fi: drm-kmod (i915kms), webcamd (for camera), playerctl (media keys)
 - Audio: pulseaudio (pactl) or pipewire + wireplumber + pipewire-pulse
-- Utilities: git, bash/zsh, doas, clipmenu (clipmenud), xidle, backlight
+- Utilities: git, bash/zsh, doas, clipmenu (clipmenud), xidle, xbacklight
 
 Notes:
 - Add your user to the video group for graphics/backlight access.
