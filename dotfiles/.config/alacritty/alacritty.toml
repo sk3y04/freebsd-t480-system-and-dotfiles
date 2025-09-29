@@ -1,0 +1,24 @@
+[general]
+import = [
+    "~/.config/alacritty/themes/themes/nord.toml"
+]
+
+[font]
+size = 7.5
+
+[font.normal]
+family = "JetBrains Mono"
+style = "Regular"
+
+[font.bold]
+family = "Jetbrains Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrains Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "JetBrains Mono"
+style = "Italic"
+

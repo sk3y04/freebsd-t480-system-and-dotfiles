@@ -1,0 +1,31 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Vim/Emacs/Sublime swap/backup
+*~
+#*#
+*.swp
+*.swo
+*.swn
+*.swm
+
+# Python/node caches (if any stray into the repo)
+__pycache__/
+*.pyc
+node_modules/
+
+# Logs and dumps
+*.log
+*.core
+core
+
+# Misc caches
+.cache/
+
+# Keep repo dotfiles (no broad ignores here to avoid excluding your configs)

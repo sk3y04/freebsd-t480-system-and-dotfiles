@@ -1,0 +1,111 @@
+# see "man i3status" for documentation.
+# Enhanced configuration to match waybar functionality
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+        colors = true
+        color_good = "#D8DEE9"
+        color_degraded = "#EBCB8B"
+        color_bad = "#BF616A"
+        interval = 1
+        markup = pango
+        output_format = "i3bar"
+}
+
+# Module order 
+order += "read_file media_player"
+#order += "read_file keyboard_layout"
+#order += "read_file network"
+#order += "read_file ping"
+order += "read_file ram_usage"
+order += "cpu_usage"
+order += "read_file cpu_temperature"
+order += "read_file audio"
+order += "read_file backlight"
+order += "battery all"
+order += "tztime local"
+
+# Custom modules using read_file
+read_file media_player {
+        format ="<span color='#D8DEE9'>%content</span>"
+        path = "/tmp/i3status_media"
+        max_characters = 75
+}
+
+read_file keyboard_layout {
+        format = "<span color='#D8DEE9'>⌨</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_keyboard"
+        max_characters = 10
+}
+
+read_file network {
+        format = "<span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_network"  
+        max_characters = 30
+}
+
+read_file ping {
+        format = "<span color='#A3BE8C'>(%content)</span>"
+        path = "/tmp/i3status_ping"
+        max_characters = 10
+}
+
+read_file ram_usage {
+        format = "<span color='#D8DEE9'>RAM:</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_ram"
+        max_characters = 25
+}
+
+read_file audio {
+        format = "<span color='#D8DEE9'>VOL:</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_audio"
+        max_characters = 15
+}
+
+read_file battery_status {
+        # Only use this if you decide to read from helper instead of i3status battery
+        format = "<span color='#D8DEE9'>BAT:</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_battery"
+        max_characters = 15
+}
+
+read_file backlight {
+        format = "<span color='#D8DEE9'>NT:</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_backlight"
+        max_characters = 15
+}
+
+read_file cpu_temperature {
+        format = "<span color='#D8DEE9'>TEMP:</span> <span color='#A3BE8C'>%content</span>"
+        path = "/tmp/i3status_temperature"
+        max_characters = 15
+}
+
+# Fix battery module for FreeBSD (no 'path' here)
+battery all {
+        format = "<span color='#D8DEE9'>%status</span> <span color='#A3BE8C'>%percentage</span> <span color='#A3BE8C'>%remaining</span>"
+        format_down = "<span color='#D8DEE9'>No battery</span>"
+        status_chr = "CHR"
+        status_bat = "BAT"
+        status_unk = "?"
+        status_full = "☻"
+        low_threshold = 15
+        threshold_type = "percentage"
+        # IMPORTANT on FreeBSD: do NOT set 'path'. That is Linux-only.
+}
+
+# CPU usage module
+cpu_usage {
+        format = "<span color='#D8DEE9'>CPU:</span> <span color='#A3BE8C'>%usage</span>"
+        max_threshold = 90
+        degraded_threshold = 75
+}
+
+# Date and time
+tztime local {
+        format = "<span color='#D8DEE9'>%Y/%m/%d (w%V) %H:%M</span> "
+}

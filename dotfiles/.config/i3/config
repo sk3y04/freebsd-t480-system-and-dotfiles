@@ -1,0 +1,302 @@
+# FreeBSD 14 Nordic i3 config file
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+### Variables for settings ###
+set $mod                             Mod4
+set $smod                            Shift
+set $wm_setting_font                 pango:JetBrains Mono Regular 12
+set $wm_setting_gap_width            15
+set $wm_setting_gap_heigth           15
+set $wm_setting_border_size          2
+set $wm_setting_key_left             Left
+set $wm_setting_key_down             Down
+set $wm_setting_key_up               Up
+set $wm_setting_key_right            Right
+
+set $wm_setting_app_terminal         alacritty
+set $wm_setting_app_browser          firefox
+set $wm_setting_app_launcher         rofi -show drun
+set $wm_setting_app_compositor       picom
+set $wm_setting_app_clipboard        clipmenud
+set $wm_setting_app_wallpaper        feh --bg-fill
+set $wm_setting_wallpaper_image      /your/path/to/wallpaper.jpg
+
+# Additional variables
+set $left                            h
+set $down                            j
+set $up                              k
+set $right                           l
+set $screenshot                      scrot ~/Pictures/screenshots/scrn-$(date +%Y-%m-%d-%H-%M-%S).png
+set $screenclip                      scrot -s ~/Pictures/screenshots/scrn-$(date +%Y-%m-%d-%H-%M-%S).png
+
+set $wm_color_border_active_bg       #81A1C1
+set $wm_color_border_active_fg       #3B4252
+set $wm_color_border_inactive_bg     #3B4252
+set $wm_color_border_inactive_fg     #D8DEE9
+set $wm_color_background             #2E3440
+
+# Color variables
+set $cl_high                         #009ddc
+set $cl_indi                         #d9d8d8
+set $cl_back                         #231f20
+set $cl_fore                         #d9d8d8
+set $cl_urge                         #ee2e24
+
+set $bar_setting_position            top
+set $bar_setting_mode                dock
+set $bar_setting_font                pango:JetBrains Mono Regular 12
+set $bar_setting_separator           " | "
+set $bar_setting_statusCommand       i3status
+set $bar_setting_trayoutput          full
+
+set $bar_color_background            #3B4252
+set $bar_color_foreground            #D8DEE9
+set $bar_color_statusline            #D8DEE9
+set $bar_color_separator             #D8DEE9
+
+set $bar_color_workspace_focused_bg  #A3BE8C
+set $bar_color_workspace_focused_fg  #D8DEE9
+set $bar_color_workspace_active_bg   #EBCB8B
+set $bar_color_workspace_active_fg   #2E3440
+set $bar_color_workspace_inactive_bg #3B4252
+set $bar_color_workspace_inactive_fg #D8DEE9
+set $bar_color_workspace_urgent_bg   #D08770
+set $bar_color_workspace_urgent_fg   #2E3440
+
+### Applications ###
+# Start a terminal emulator
+bindsym $mod+Return exec $wm_setting_app_terminal
+
+# Start a web browser
+bindsym $mod+$smod+Return exec $wm_setting_app_browser
+
+# Start a program launcher
+bindsym $mod+d exec $wm_setting_app_launcher
+
+# Run a window compositor (for effects like transparency or full VSync)
+exec_always --no-startup-id $wm_setting_app_compositor
+
+# Additional key bindings from sway config
+
+# Screen lock
+bindsym $mod+o exec i3lock -c 000000
+
+# Screenshot bindings 
+bindsym Print exec --no-startup-id $screenshot
+bindsym $mod+Shift+s exec --no-startup-id $screenclip
+
+# Layout controls
+bindsym $mod+b split h
+bindsym $mod+v split v
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Focus controls with vim-like keys
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Move focused window with vim-like keys
+bindsym $mod+$smod+$left move left
+bindsym $mod+$smod+$down move down
+bindsym $mod+$smod+$up move up
+bindsym $mod+$smod+$right move right
+
+# Scratchpad functionality
+bindsym $mod+$smod+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# Focus parent container
+bindsym $mod+a focus parent
+
+# Toggle between tiling and floating area focus
+bindsym $mod+space focus mode_toggle
+
+# Multimedia controls 
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -3%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+
+# Brightness controls (FreeBSD: backlight(8) -> brightness utility -> xbacklight)
+bindsym XF86MonBrightnessUp exec --no-startup-id backlight incr 2
+bindsym XF86MonBrightnessDown exec --no-startup-id backlight decr 1
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1  " 1 "
+set $ws2  " 2 "
+set $ws3  " 3 "
+set $ws4  " 4 "
+set $ws5  " 5 "
+set $ws6  " 6 "
+set $ws7  " 7 "
+set $ws8  " 8 "
+set $ws9  " 9 "
+set $ws10 " 10 "
+
+# Switch to workspace n
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# Move focused container to workspace n
+bindsym $mod+$smod+1 move container to workspace $ws1
+bindsym $mod+$smod+2 move container to workspace $ws2
+bindsym $mod+$smod+3 move container to workspace $ws3
+bindsym $mod+$smod+4 move container to workspace $ws4
+bindsym $mod+$smod+5 move container to workspace $ws5
+bindsym $mod+$smod+6 move container to workspace $ws6
+bindsym $mod+$smod+7 move container to workspace $ws7
+bindsym $mod+$smod+8 move container to workspace $ws8
+bindsym $mod+$smod+9 move container to workspace $ws9
+bindsym $mod+$smod+0 move container to workspace $ws10
+
+### Window sizes and positions ###
+# Cange focus
+bindsym $mod+$wm_setting_key_left        focus left
+bindsym $mod+$wm_setting_key_down        focus down
+bindsym $mod+$wm_setting_key_up          focus up
+bindsym $mod+$wm_setting_key_right       focus right
+
+# Move focused window
+bindsym $mod+$smod+$wm_setting_key_left  move left
+bindsym $mod+$smod+$wm_setting_key_down  move down
+bindsym $mod+$smod+$wm_setting_key_up    move up
+bindsym $mod+$smod+$wm_setting_key_right move right
+
+# Resize window (you can also use the mouse for that)
+mode "resize" {
+#	These bindings trigger as soon as you enter the resize mode
+
+#	Pressing left will shrink the window’s width.
+#	Pressing right will grow the window’s width.
+#	Pressing up will shrink the window’s height.
+#	Pressing down will grow the window’s height.
+	bindsym $left resize shrink width 10 px or 10 ppt
+	bindsym $down resize grow height 10 px or 10 ppt
+	bindsym $up resize shrink height 10 px or 10 ppt
+	bindsym $right resize grow width 10 px or 10 ppt
+
+	bindsym $wm_setting_key_left  resize shrink width 10 px or 10 ppt
+	bindsym $wm_setting_key_down  resize grow height 10 px or 10 ppt
+	bindsym $wm_setting_key_up    resize shrink height 10 px or 10 ppt
+	bindsym $wm_setting_key_right resize grow width 10 px or 10 ppt
+
+#	Resize the gap width and height
+	bindsym $smod+$wm_setting_key_left  gaps horizontal minus 5
+	bindsym $smod+$wm_setting_key_down  gaps horizontal plus 5
+	bindsym $smod+$wm_setting_key_up    gaps vertical minus 5
+	bindsym $smod+$wm_setting_key_right gaps vertical plus 5
+
+#	Back to normal: Enter or Escape or $mod+r
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+### Gaps ###
+gaps inner 5
+gaps outer 1
+smart_gaps on
+
+### Borders ###
+default_border none
+default_floating_border normal
+hide_edge_borders smart
+
+### Colors ###
+# class                 border                       background                   text                         indicator                    child_border
+client.focused          $cl_high                     $cl_high                     $cl_fore                     $cl_indi                     $cl_high
+client.focused_inactive $cl_back                     $cl_back                     $cl_fore                     $cl_back                     $cl_back
+client.unfocused        $cl_back                     $cl_back                     $cl_fore                     $cl_back                     $cl_back
+client.urgent           $cl_urge                     $cl_urge                     $cl_fore                     $cl_urge                     $cl_urge
+client.placeholder      $cl_back                     $cl_back                     $cl_fore                     $cl_back                     $cl_back
+client.background       $wm_color_background
+
+### i3bar ###
+bar {
+	position         $bar_setting_position
+	mode             $bar_setting_mode
+	font             $bar_setting_font
+	separator_symbol $bar_setting_separator
+	status_command   i3status -c ~/.config/i3status/config
+	tray_output      $bar_setting_trayoutput
+
+	colors {
+		background   $bar_color_background
+		statusline   $bar_color_statusline
+		separator    $bar_color_separator
+
+		focused_workspace  $bar_color_workspace_focused_bg  $bar_color_workspace_focused_bg  $bar_color_workspace_focused_fg
+		active_workspace   $bar_color_workspace_active_bg   $bar_color_workspace_active_bg   $bar_color_workspace_active_fg
+		inactive_workspace $bar_color_workspace_inactive_bg $bar_color_workspace_inactive_bg $bar_color_workspace_inactive_fg
+		urgent_workspace   $bar_color_workspace_urgent_bg   $bar_color_workspace_urgent_bg   $bar_color_workspace_urgent_fg
+	}
+}
+
+### Miscellaneous settings ###
+# Set the font used for titlebars (which are hidden here)
+font $wm_setting_font
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Enter fullscreen mode for the focused window
+bindsym $mod+f fullscreen toggle
+
+# Toggle between tiling and floating
+bindsym $mod+$smod+f floating toggle
+
+# Kill the focused window
+bindsym $mod+$smod+q kill
+
+# Reload the configuration file 
+bindsym $mod+$smod+c reload
+
+# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+$smod+r restart
+
+# Exit i3 (logs you out of your X session)
+bindsym $mod+$smod+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# Notifications 
+exec_always --no-startup-id sh -c 'pkill dunst; dunst'
+
+# Dunst controls
+bindsym $mod+n exec --no-startup-id dunstctl close
+bindsym $mod+$smod+n exec --no-startup-id dunstctl close-all
+bindsym $mod+Control+n exec --no-startup-id dunstctl history-pop
+
+# Clipboard manager 
+exec --no-startup-id $wm_setting_app_clipboard
+
+# Set wallpaper
+exec_always --no-startup-id $wm_setting_app_wallpaper $wm_setting_wallpaper_image
+
+# Auto-lock screen 
+exec --no-startup-id xidle -time 600 -locker i3lock
+
+# Extended display (default behavior when HDMI is connected)
+# This sets the external monitor to the right of the laptop screen
+bindsym $mod+m exec --no-startup-id xrandr --output eDP-1 --primary --auto --output HDMI-2 --auto --left-of eDP-1
+
+# Mirrored display (uncomment these lines if you want mirroring instead)
+#bindsym $mod+m exec --no-startup-id xrandr --output eDP-1 --primary --auto --output HDMI-2 --auto --same-as eDP-1
+
+# Start i3status helper scripts for enhanced functionality
+exec_always --no-startup-id sh ~/.config/i3status/scripts/i3status-helper.sh &

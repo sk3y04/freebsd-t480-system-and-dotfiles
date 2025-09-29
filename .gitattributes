@@ -1,0 +1,16 @@
+# Normalize text files to LF, keep binary untouched
+* text=auto eol=lf
+
+# Treat common config formats as text explicitly
+*.conf text eol=lf
+*.sh   text eol=lf
+*.md   text eol=lf
+*.toml text eol=lf
+*.rasi text eol=lf
+*.ini  text eol=lf
+
+# Ensure PNG/SVG remain binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.svg binary
