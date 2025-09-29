@@ -95,7 +95,7 @@ Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst,
 doas pkg install -y \
   xorg xinit i3 i3status i3lock rofi dunst picom feh scrot \
   alacritty jetbrains-mono clipmenu xidle \
-  pulseaudio playerctl backlight git doas
+  pulseaudio playerctl xbacklight git doas
 ```
 
 ### Clone and link
