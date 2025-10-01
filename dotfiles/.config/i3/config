@@ -289,7 +289,7 @@ exec --no-startup-id $wm_setting_app_clipboard
 exec_always --no-startup-id $wm_setting_app_wallpaper $wm_setting_wallpaper_image
 
 # Auto-lock screen 
-exec --no-startup-id xidle -time 600 -locker i3lock
+exec --no-startup-id xidle -timeout 600 -program "i3lock -c 000000"
 
 # Extended display (default behavior when HDMI is connected)
 # This sets the external monitor to the right of the laptop screen

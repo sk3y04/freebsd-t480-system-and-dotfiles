@@ -21,35 +21,32 @@ This guide explains how to install FreeBSD 14 on a ThinkPad T480 and apply this 
 All referenced files live in `system_config_files/` in this repo.
 
 ### Boot loader and kernel modules — `/boot/loader.conf`
-Key items from this repo’s `loader.conf` and why they matter:
-- i915kms_load="YES": Intel UHD 620 graphics with KMS.
-- acpi_ibm_load="YES": ThinkPad ACPI extras (Fn keys, thermal bits).
-- acpi_video_load="YES": Backlight control hooks.
-- if_iwm_load="YES", iwm8265fw_load="YES": Intel 8265 Wi‑Fi driver + firmware.
-- if_em_load="YES": Intel gigabit ethernet driver.
-- cpufreq_load="YES", coretemp_load="YES": CPU scaling + temp sensors.
-- snd_hda_load="YES": HDA audio.
-- cuse_load="YES": Userspace character devices (needed by some multimedia tools).
-- zfs_load="YES": ZFS support at boot.
-- vm.kmem_size, vm.kmem_size_max, vfs.zfs.arc_max: cap kernel/ZFS memory (set to 4G here; adjust to your RAM).
-- hw.pci.do_power_nodriver=3: aggressive power savings for unbound PCI devices.
+This repo keeps `loader.conf` lean—only early-boot essentials and tunables live here:
+- `aesni_load="YES"`, `geom_eli_load="YES"`, `cryptodev_load="YES"`: enable GELI-encrypted ZFS pools with hardware crypto.
+- `zfs_load="YES"`: bring up ZFS before the root pool mounts.
+- `hw.pci.do_power_nodriver=3`: aggressive PCI power savings while the kernel attaches devices.
+- `hw.psm.synaptics_support="1"`: enable Synaptics touchpad features (must be set pre-boot).
+- `hw.snd.latency="4"`: slightly bigger HDA buffer—smooths occasional pops without introducing a big delay.
+- `vm.kmem_size="4G"`, `vm.kmem_size_max="4G"`, `vfs.zfs.arc_max="4G"`: reserve 4 GB kernel/ARC budget so a 16 GB T480 keeps plenty of RAM for userland—tune proportionally if you have different memory.
+- `kern.ipc.shmseg=1024`, `kern.ipc.shmmni=1024`: higher shared-memory ceilings for browsers and productivity apps.
+- `hw.i915kms.enable_dc=2`, `hw.i915kms.enable_fbc=1`: optional Intel power knobs (safe defaults here, disable if your panel flickers).
 
-Note: This file enables i915 power knobs (`hw.i915kms.enable_dc=2`, `hw.i915kms.enable_fbc=1`). They can improve battery life but may cause flicker/instability on some panels—tune or disable if you encounter issues.
+All other hardware modules (graphics, Wi‑Fi, audio, ACPI extras, fuse/cuse, sensors) now load via `rc.conf`’s `kld_list`, letting you adjust them without touching the boot loader. If you change hardware, update `kld_list` accordingly.
 
 ### Services and networking — `/etc/rc.conf`
 Highlights from this repo’s `rc.conf`:
-- Networking: `wlans_iwm0="wlan0"`, `ifconfig_wlan0="WPA DHCP"` (Wi‑Fi); `ifconfig_em0="DHCP"` (Ethernet); background dhclient enabled.
-- Time: `ntpd_enable="YES"` (+ `ntpdate_enable="YES"`, legacy; consider just ntpd with -g).
-- Power: both `powerd_enable="YES"` and `powerdxx_enable="YES"` are set. Choose one (see Notes below).
-- Filesystems: `zfs_enable="YES"`.
-- Desktop plumbing: `dbus_enable="YES"`.
-- DNS: `local_unbound_enable="YES"`.
-- Webcam: `webcamd_enable="YES"` (one instance configured with flags for `ugen0.3`).
-- Misc: `clear_tmp_enable="YES"`, keyboard `keymap="pl.kbd"`.
+- Host & basics: `hostname="ddevil"`, `keymap="pl.kbd"`, `clear_tmp_enable="YES"`.
+- Driver loading: `kld_list="/boot/modules/i915kms.ko if_iwm iwm8265fw fusefs acpi_video acpi_ibm cpufreq coretemp snd_hda cuse"`—adjust this list if your hardware differs.
+- Networking: background DHCP (`background_dhclient="YES"`), IPv4-preferred policy (`ip6addrctl_policy="ipv4_prefer"`), wired DHCP (`ifconfig_em0="DHCP"`), and Wi‑Fi with WPA + powersave + Polish regulatory domain (`wlans_iwm0="wlan0"`, `create_args_wlan0="country PL regdomain ETSI"`, `ifconfig_wlan0="WPA powersave DHCP"`, `ifconfig_wlan0_ipv6="inet6 accept_rtadv"`).
+- Time: `ntpd_enable="YES"` with `ntpd_flags="-g"` (skips legacy ntpdate).
+- Power: `powerdxx_enable="YES"` with tuned flags, `powerd_enable="NO"`.
+- Services: `zfs_enable="YES"`, `local_unbound_enable="YES"`, `dbus_enable="YES"`, `pcscd_enable="YES"`, `pcscd_flags="--disable-polkit"`.
+- Webcam: `webcamd_enable="YES"` plus `webcamd_0_flags="-d ugen0.3 -B"` (adjust device path after first boot).
 
 Notes:
-- Don’t run both power daemons. If you use base `powerd`, set `powerdxx_enable="NO"`. If you prefer `powerdxx` (pkg: `sysutils/powerdxx`), set `powerd_enable="NO"` and tune `powerdxx_flags`.
-- `webcamd_0_flags` pins a device path; you may need to adjust it after first boot (`usbconfig` shows actual ugen path).
+- Prefer IPv4 while still accepting IPv6 router advertisements per interface; change `ip6addrctl_policy` if your networks are IPv6-first.
+- Tweak `powerdxx_flags` or swap back to base `powerd` only after disabling `powerdxx`.
+- If the Wi‑Fi regulatory domain differs, update `create_args_wlan0` before rebooting.
 
 ### Kernel tuning — `/etc/sysctl.conf`
 Key lines from this repo’s `sysctl.conf`:
@@ -89,12 +86,12 @@ doas ln -sf "$(pwd)/system config/20-intel.conf" \
 All user configs are under `dotfiles/.config/` and `.themes/`.
 
 ### Install desktop packages
-Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, xidle, pulseaudio or pipewire(+wireplumber), playerctl, xbacklight, git, doas.
+Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, powerdxx, xidle, pulseaudio or pipewire(+wireplumber), playerctl, xbacklight, git, doas.
 
 ```bash
 doas pkg install -y \
   xorg xinit i3 i3status i3lock rofi dunst picom feh scrot \
-  alacritty jetbrains-mono clipmenu xidle \
+  alacritty jetbrains-mono clipmenu powerdxx xidle \
   pulseaudio playerctl xbacklight git
 ```
 
@@ -149,7 +146,7 @@ startx
 - Graphics: verify `i915kms` is loaded (`kldstat | grep i915`). For tearing, ensure `20-intel.conf` and KMS are active; consider enabling TearFree in the Xorg snippet already provided in repo.
 - Brightness: `backlight` utility must be installed and user in `video` group.
 - Audio: use `pactl` against `@DEFAULT_SINK@`; set default unit with `sysctl hw.snd.default_unit=...` if needed.
-- Power: choose `powerd` or `powerdxx` (not both). For base `powerd`, a good start is `-a hiadaptive -b adaptive -n hiadaptive`.
+- Power: tune `powerdxx_flags` for your workload (the repo ships with `-a hiadaptive -b adaptive -n hiadaptive`). If you ever swap back to base `powerd`, remember to disable `powerdxx` entirely first.
 - Webcam: adjust `webcamd_0_flags` for your device path (`usbconfig` helps locate it).
 - Memory/ZFS: if you have more/less RAM, adjust `vm.kmem_size*` and `vfs.zfs.arc_max` in `loader.conf` proportionally.
 
