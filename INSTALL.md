@@ -69,17 +69,7 @@ doas pkg install -y xorg drm-kmod
 doas pw groupmod video -m "$USER"
 ```
 
-- This repo provides minimal Xorg snippets in `system config/10-input.conf` and `system config/20-intel.conf` (libinput touchpad/trackpoint options; modesetting with DRI3 and TearFree). Place them under `/usr/local/etc/X11/xorg.conf.d/` or symlink from there. Example:
-
-```bash
-doas mkdir -p /usr/local/etc/X11/xorg.conf.d
-doas ln -sf "$(pwd)/system config/10-input.conf" \
-  /usr/local/etc/X11/xorg.conf.d/10-input.conf
-doas ln -sf "$(pwd)/system config/20-intel.conf" \
-  /usr/local/etc/X11/xorg.conf.d/20-intel.conf
-```
-
-- On FreeBSD 14 with current `drm-kmod`, using the `modesetting` driver is fine; KMS is provided by `i915kms` loaded via `loader.conf`.
+- This repo provides minimal Xorg snippets in `system config/10-input.conf` and `system config/20-intel.conf` (libinput touchpad/trackpoint options; modesetting with DRI3 and TearFree). Place them under `/usr/local/etc/X11/xorg.conf.d/`.
 
 ## 4) Dotfiles and GUI Setup
 
