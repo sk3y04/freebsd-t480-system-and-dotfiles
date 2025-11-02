@@ -5,7 +5,7 @@ A clean, fast, and power‑efficient FreeBSD desktop tailored for the ThinkPad T
 ## Key Features
 
 - ThinkPad T480 optimized: Intel UHD 620 acceleration, Wi‑Fi (Intel 8265), TrackPoint/TouchPad, ACPI/ThinkPad extras
-- Smart laptop power: CPU frequency scaling via powerdxx, aggressive PCI power saving, thermal sensors, and lid-close suspend (S3)
+- Smart laptop power: CPU frequency scaling via powerd, aggressive PCI power saving, thermal sensors, and lid-close suspend (S3)
 - Opinionated security + performance: restrictive sysctls, ZFS tuning (ARC cap, ashift=12), larger TCP buffers, IPv4-preferred networking with per-interface IPv6, CUBIC congestion control, GELI disk encryption
 - i3wm workflow: sensible gaps, vim‑style focus/move, scratchpad, quick screenshots, and multi‑monitor helpers
 - Nordic theme everywhere: consistent Nord palette for i3, rofi, alacritty, dunst, and GTK (Nordic theme included)
