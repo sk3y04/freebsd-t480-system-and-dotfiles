@@ -39,13 +39,12 @@ Highlights from this repo’s `rc.conf`:
 - Driver loading: `kld_list="/boot/modules/i915kms.ko if_iwm iwm8265fw fusefs acpi_video acpi_ibm cpufreq coretemp snd_hda cuse"`—adjust this list if your hardware differs.
 - Networking: background DHCP (`background_dhclient="YES"`), IPv4-preferred policy (`ip6addrctl_policy="ipv4_prefer"`), wired DHCP (`ifconfig_em0="DHCP"`), and Wi‑Fi with WPA + powersave + Polish regulatory domain (`wlans_iwm0="wlan0"`, `create_args_wlan0="country PL regdomain ETSI"`, `ifconfig_wlan0="WPA powersave DHCP"`, `ifconfig_wlan0_ipv6="inet6 accept_rtadv"`).
 - Time: `ntpd_enable="YES"` with `ntpd_flags="-g"` (skips legacy ntpdate).
-- Power: `powerdxx_enable="YES"` with tuned flags, `powerd_enable="NO"`.
+- Power: `powerd_enable="YES"`.
 - Services: `zfs_enable="YES"`, `local_unbound_enable="YES"`, `dbus_enable="YES"`, `pcscd_enable="YES"`, `pcscd_flags="--disable-polkit"`.
 - Webcam: `webcamd_enable="YES"` plus `webcamd_0_flags="-d ugen0.3 -B"` (adjust device path after first boot).
 
 Notes:
 - Prefer IPv4 while still accepting IPv6 router advertisements per interface; change `ip6addrctl_policy` if your networks are IPv6-first.
-- Tweak `powerdxx_flags` or swap back to base `powerd` only after disabling `powerdxx`.
 - If the Wi‑Fi regulatory domain differs, update `create_args_wlan0` before rebooting.
 
 ### Kernel tuning — `/etc/sysctl.conf`
@@ -76,7 +75,7 @@ doas pw groupmod video -m "$USER"
 All user configs are under `dotfiles/.config/` and `.themes/`.
 
 ### Install desktop packages
-Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, powerdxx, xidle, pulseaudio or pipewire(+wireplumber), playerctl, xbacklight, git, doas.
+Suggested set (adapt as needed): xorg, xinit, i3, i3status, i3lock, rofi, dunst, picom, feh, scrot, alacritty, jetbrains-mono, clipmenu, xidle, pulseaudio or pipewire(+wireplumber), playerctl, xbacklight, git, doas.
 
 ```bash
 doas pkg install -y \
@@ -136,7 +135,6 @@ startx
 - Graphics: verify `i915kms` is loaded (`kldstat | grep i915`). For tearing, ensure `20-intel.conf` and KMS are active; consider enabling TearFree in the Xorg snippet already provided in repo.
 - Brightness: `backlight` utility must be installed and user in `video` group.
 - Audio: use `pactl` against `@DEFAULT_SINK@`; set default unit with `sysctl hw.snd.default_unit=...` if needed.
-- Power: tune `powerdxx_flags` for your workload (the repo ships with `-a hiadaptive -b adaptive -n hiadaptive`). If you ever swap back to base `powerd`, remember to disable `powerdxx` entirely first.
 - Webcam: adjust `webcamd_0_flags` for your device path (`usbconfig` helps locate it).
 - Memory/ZFS: if you have more/less RAM, adjust `vm.kmem_size*` and `vfs.zfs.arc_max` in `loader.conf` proportionally.
 
